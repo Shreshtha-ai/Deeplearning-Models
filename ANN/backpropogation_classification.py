@@ -30,9 +30,7 @@ def linear_forward(A_prev,W,b):
     Z = np.dot(W.T, A_prev) + b  
 
     A = sigmoid(Z)  
-  
-  
-  return A
+    return A
 
 
 def L_layer_forward(X, parameters):
@@ -68,4 +66,85 @@ def update_parameters(parameters,y,y_hat,A1,X):
 
   parameters['W1'][1][0] = parameters['W1'][1][0] + (0.0001 * (y - y_hat)*parameters['W2'][1][0]*A1[1][0]*(1-A1[1][0])*X[0][0])
   parameters['W1'][1][1] = parameters['W1'][1][1] + (0.0001 * (y - y_hat)*parameters['W2'][1][0]*A1[1][0]*(1-A1[1][0])*X[1][0])
-  parameters['b1'][1][0] = parameters['b1'][1][0] + (0.0001 * (y - y_hat)*parameters['W2'][1][0]*A1[1][0]*(1-A1[1][0]))
+  parameters['b1'][1][0] = parameters['b1'][1][0] + (0.0001 * (y - y_hat)*parameters['W2'][1][0]*A1[1][0]*(1-A1[1][0])) 
+
+
+#1st student
+X = df[['cgpa', 'profile_score']].values[0].reshape(2,1) # Shape(no of features, no. of training example)
+y = df[['placed']].values[0][0]
+
+# Parameter initialization
+parameters = initialize_parameters([2,2,1])
+
+y_hat,A1 = L_layer_forward(X,parameters)
+y_hat = y_hat[0][0]
+
+update_parameters(parameters,y,y_hat,A1,X)
+
+print('Loss for 1st student  - ',-y*np.log(y_hat) - (1-y)*np.log(1-y_hat))
+
+#2nd student 
+X = df[['cgpa', 'profile_score']].values[1].reshape(2,1) 
+y = df[['placed']].values[1][0]
+
+y_hat,A1 = L_layer_forward(X,parameters)
+y_hat = y_hat[0][0]
+
+update_parameters(parameters,y,y_hat,A1,X)
+
+print('Loss for 2nd student - ',-y*np.log(y_hat) - (1-y)*np.log(1-y_hat))
+
+#3rd student 
+X = df[['cgpa', 'profile_score']].values[2].reshape(2,1) 
+y = df[['placed']].values[2][0]
+
+y_hat,A1 = L_layer_forward(X,parameters)
+y_hat = y_hat[0][0]
+
+update_parameters(parameters,y,y_hat,A1,X)
+
+print('Loss for 3rd student - ',-y*np.log(y_hat) - (1-y)*np.log(1-y_hat))
+
+
+#4th student 
+X = df[['cgpa', 'profile_score']].values[3].reshape(2,1) 
+y = df[['placed']].values[3][0]
+
+y_hat,A1 = L_layer_forward(X,parameters)
+y_hat = y_hat[0][0]
+
+update_parameters(parameters,y,y_hat,A1,X)
+
+print('Loss for 4th student - ',-y*np.log(y_hat) - (1-y)*np.log(1-y_hat))
+
+
+parameters = initialize_parameters([2,2,1])
+epochs = 50
+
+for i in range(epochs):
+
+  Loss = []
+
+  for j in range(df.shape[0]):
+
+    X = df[['cgpa', 'profile_score']].values[j].reshape(2,1) # Shape(no of features, no. of training example)
+    y = df[['placed']].values[j][0]
+
+
+
+    y_hat,A1 = L_layer_forward(X,parameters)
+    y_hat = y_hat[0][0]
+
+    update_parameters(parameters,y,y_hat,A1,X)
+
+    Loss.append(-y*np.log(y_hat) - (1-y)*np.log(1-y_hat))
+
+  print('Epoch - ',i+1,'Loss - ',np.array(Loss).mean())
+
+
+
+
+
+
+
+
