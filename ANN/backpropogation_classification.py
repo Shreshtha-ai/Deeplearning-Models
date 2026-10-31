@@ -18,3 +18,54 @@ def initialize_parameters(layer_dims):
       
 
   return parameters
+
+
+def sigmoid(Z): #sigmoid function 
+  
+  A = 1/(1+np.exp(-Z))
+
+  return A
+
+def linear_forward(A_prev,W,b):
+    Z = np.dot(W.T, A_prev) + b  
+
+    A = sigmoid(Z)  
+  
+  
+  return A
+
+
+def L_layer_forward(X, parameters):
+
+  A = X
+  L = len(parameters) // 2                  # number of layers in the neural network
+  
+  for l in range(1, L+1):
+    A_prev = A 
+    Wl = parameters['W' + str(l)]
+    bl = parameters['b' + str(l)]
+    #print("A"+str(l-1)+": ", A_prev)
+    #print("W"+str(l)+": ", Wl)
+    #print("b"+str(l)+": ", bl)
+    #print("--"*20)
+
+    A = linear_forward(A_prev, Wl, bl)
+    #print("A"+str(l)+": ", A)
+    #print("**"*20) 
+          
+  return A,A_prev
+
+
+
+def update_parameters(parameters,y,y_hat,A1,X):
+  parameters['W2'][0][0] = parameters['W2'][0][0] + (0.0001 * (y - y_hat)*A1[0][0])
+  parameters['W2'][1][0] = parameters['W2'][1][0] + (0.0001 * (y - y_hat)*A1[1][0])
+  parameters['b2'][0][0] = parameters['W2'][1][0] + (0.0001 * (y - y_hat))
+
+  parameters['W1'][0][0] = parameters['W1'][0][0] + (0.0001 * (y - y_hat)*parameters['W2'][0][0]*A1[0][0]*(1-A1[0][0])*X[0][0])
+  parameters['W1'][0][1] = parameters['W1'][0][1] + (0.0001 * (y - y_hat)*parameters['W2'][0][0]*A1[0][0]*(1-A1[0][0])*X[1][0])
+  parameters['b1'][0][0] = parameters['b1'][0][0] + (0.0001 * (y - y_hat)*parameters['W2'][0][0]*A1[0][0]*(1-A1[0][0]))
+
+  parameters['W1'][1][0] = parameters['W1'][1][0] + (0.0001 * (y - y_hat)*parameters['W2'][1][0]*A1[1][0]*(1-A1[1][0])*X[0][0])
+  parameters['W1'][1][1] = parameters['W1'][1][1] + (0.0001 * (y - y_hat)*parameters['W2'][1][0]*A1[1][0]*(1-A1[1][0])*X[1][0])
+  parameters['b1'][1][0] = parameters['b1'][1][0] + (0.0001 * (y - y_hat)*parameters['W2'][1][0]*A1[1][0]*(1-A1[1][0]))
